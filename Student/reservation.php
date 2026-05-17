@@ -22,7 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reserve'])) {
     } else {
         $pdo->prepare("INSERT INTO reservations (id_number, student_name, purpose, lab, pc_no, reserved_date) VALUES (?,?,?,?,?,?)")
             ->execute([$_SESSION['user'], $name, $purpose, $lab, $pc_no, $date]);
-        $success = "Reservation submitted successfully! Waiting for admin approval.";
+        header("Location: reservation.php?msg=success");
+        exit();
     }
 }
 
@@ -44,6 +45,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
 if (isset($_GET['msg'])) {
     if ($_GET['msg'] === 'disabled') $success = "Reservation has been disabled.";
     if ($_GET['msg'] === 'enabled') $success = "Reservation has been enabled and is now Pending.";
+    if ($_GET['msg'] === 'success') $success = "Reservation submitted successfully! Waiting for admin approval.";
 }
 
 

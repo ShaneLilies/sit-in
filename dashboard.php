@@ -54,6 +54,16 @@ if ($setting) {
 }
 
 $success = $error = '';
+if (isset($_GET['msg'])) {
+    if ($_GET['msg'] === 'success') {
+        $success = "Sit-in request submitted successfully! Waiting for admin approval.";
+    } elseif ($_GET['msg'] === 'cancelled') {
+        $success = "Your pending sit-in request has been cancelled.";
+    }
+}
+if (isset($_GET['photo_success'])) {
+    $success = "Profile photo updated successfully!";
+}
 
 // Check for existing pending session
 $pending_check = $pdo->prepare("SELECT id, pc_no, lab FROM sit_in_records WHERE id_number = ? AND status = 'Pending'");
@@ -71,8 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_sitin'])) {
         // Delete the pending record
         $pdo->prepare("DELETE FROM sit_in_records WHERE id=?")->execute([$pending_session['id']]);
         
-        $success = "Your pending sit-in request has been cancelled.";
-        $pending_session = false; // Reset so the UI shows the request button again
+        header("Location: dashboard.php?msg=cancelled");
+        exit();
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_sitin'])) {
     if (!$reservations_enabled) {
@@ -112,15 +122,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_sitin'])) {
                                    VALUES (?,?,?,?, NOW(), 'Pending', ?)")
                         ->execute([$_SESSION['user'], $name, $purpose, $lab, $pc_no]);
                     
-                    $success = "Sit-in request submitted successfully for PC $pc_no! Waiting for admin approval.";
-                    
-                    // Refresh student data & pending check
-                    $stmt = $pdo->prepare("SELECT * FROM students WHERE id_number = ?");
-                    $stmt->execute([$_SESSION['user']]);
-                    $student = $stmt->fetch();
-                    
-                    $pending_check->execute([$_SESSION['user']]);
-                    $pending_session = $pending_check->fetch();
+                    header("Location: dashboard.php?msg=success");
+                    exit();
                 }
             }
         }
