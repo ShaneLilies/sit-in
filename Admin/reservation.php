@@ -85,10 +85,7 @@ include 'header.php';
                     <?php else: ?>
                     <span style="color:#999;font-size:12px"><?= $r['status'] ?></span>
                     <?php endif; ?>
-                    <a href="?delete=<?= $r['id'] ?>" class="btn-sm btn-danger"
-                        onclick="return confirm('Delete this reservation permanently?')">
-                        <i class="fas fa-trash"></i>
-                    </a>
+
                 </td>
             </tr>
             <?php endforeach; ?>
