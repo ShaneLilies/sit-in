@@ -508,9 +508,7 @@ if (!empty($student['photo']) && file_exists('uploads/photos/' . $student['photo
                             <td><span class="badge badge-<?=strtolower($s['status'])?>"><?= $s['status'] ?></span></td>
                         </tr>
                         <?php endforeach; ?>
-                        <?php if(empty($recent_sessions)): ?>
-                        <tr><td colspan="6" style="text-align:center;color:var(--text-muted)">No sessions recorded yet.</td></tr>
-                        <?php endif; ?>
+
                     </tbody>
                 </table>
             </div>

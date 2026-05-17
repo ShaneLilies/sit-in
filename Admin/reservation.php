@@ -90,9 +90,7 @@ include 'header.php';
                 </td>
             </tr>
             <?php endforeach; ?>
-            <?php if(empty($reservations)): ?>
-            <tr><td colspan="9" style="text-align:center;color:#999;padding:20px">No reservation requests yet.</td></tr>
-            <?php endif; ?>
+
             </tbody>
         </table>
     </div>

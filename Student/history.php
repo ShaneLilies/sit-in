@@ -196,9 +196,7 @@ $feedbackList = $myFeedbacks->fetchAll();
                 </td>
             </tr>
             <?php endforeach; ?>
-            <?php if(empty($history)): ?>
-            <tr><td colspan="9" style="text-align:center;color:#999;padding:20px">No history yet.</td></tr>
-            <?php endif; ?>
+
             </tbody>
         </table>
     </div>
@@ -233,9 +231,7 @@ $feedbackList = $myFeedbacks->fetchAll();
                 <td><?=date('M d, Y', strtotime($f['created_at']))?></td>
             </tr>
             <?php endforeach; ?>
-            <?php if(empty($feedbackList)): ?>
-            <tr><td colspan="6" style="text-align:center;color:#999;padding:20px">No feedback submitted yet.</td></tr>
-            <?php endif; ?>
+
             </tbody>
         </table>
     </div>
