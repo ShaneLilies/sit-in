@@ -67,7 +67,7 @@ if (isset($_GET['del_ann'])) { $pdo->prepare("DELETE FROM announcements WHERE id
         <li><a href="sitin.php">Sit-in</a></li>
         <li><a href="records.php">View Sit-in Records</a></li>
         <li><a href="reports.php">Sit-in Reports</a></li>
-        <li><a href="feedback.php">Feedback Reports</a></li>
+        <li><a href="feedback.php">Testimonials</a></li>
         <li><a href="reservation.php">Reservation</a></li>
         <li><a href="../logout.php" class="btn-logout-nav">Log out</a></li>
     </ul>

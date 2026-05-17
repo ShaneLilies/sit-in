@@ -228,9 +228,9 @@ try {
         <li><a href="labs.php"        <?=($pageTitle??'')==='Labs'       ?'class="active"':''?>>Lab PCs</a></li>
         <li class="feedback-nav-wrap">
             <a href="feedback.php"
-               class="feedback-nav-btn <?=($pageTitle??'')==='Feedback' ? 'active' : ''?>">
+               class="feedback-nav-btn <?=($pageTitle??'')==='Testimonials' ? 'active' : ''?>">
                 <i class="fas fa-bell"></i>
-                Feedback Reports
+                Testimonials
                 <span class="notif-badge <?= $unreadFeedback === 0 ? 'hidden' : '' ?>">
                     <?= $unreadFeedback ?>
                 </span>

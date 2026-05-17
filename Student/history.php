@@ -186,7 +186,7 @@ $feedbackList = $myFeedbacks->fetchAll();
     <div class="page-title">History</div>
 
     <?php if(isset($_GET['feedback_sent'])): ?>
-    <div class="alert-success"><i class="fas fa-check-circle"></i> Feedback submitted successfully! Thank you.</div>
+    <div class="alert-success"><i class="fas fa-check-circle"></i> Testimonial submitted successfully! Thank you.</div>
     <?php endif; ?>
 
     <!-- Sit-in History Table -->
@@ -203,7 +203,7 @@ $feedbackList = $myFeedbacks->fetchAll();
                     <th>Time Out</th>
                     <th>Date</th>
                     <th>Status</th>
-                    <th>Feedback</th>
+                    <th>Testimonial</th>
                 </tr>
             </thead>
             <tbody>
@@ -226,7 +226,7 @@ $feedbackList = $myFeedbacks->fetchAll();
                         <?php else: ?>
                             <button class="btn-feedback"
                                 onclick="openFeedback(<?=$r['id']?>, '<?=htmlspecialchars($r['purpose'])?>', '<?=htmlspecialchars($r['lab'])?>')">
-                                <i class="fas fa-comment-alt"></i> Give Feedback
+                                <i class="fas fa-comment-alt"></i> Give Testimonial
                             </button>
                         <?php endif; ?>
                     <?php else: ?>
@@ -240,9 +240,9 @@ $feedbackList = $myFeedbacks->fetchAll();
         </table>
     </div>
 
-    <!-- My Feedback Table -->
+    <!-- My Testimonials Table -->
     <div class="table-card">
-        <h3><i class="fas fa-star"></i> My Submitted Feedback</h3>
+        <h3><i class="fas fa-star"></i> My Submitted Testimonials</h3>
         <table id="feedbackTable" class="dataTable" style="width:100%">
             <thead>
                 <tr>
@@ -276,14 +276,15 @@ $feedbackList = $myFeedbacks->fetchAll();
     </div>
 </div>
 
-<!-- Feedback Modal -->
+<!-- Testimonial Modal -->
 <div class="modal-overlay" id="feedbackModal">
     <div class="modal-box">
         <button class="modal-close" onclick="closeModal()">×</button>
-        <h3><i class="fas fa-comment-alt" style="color:var(--gold);margin-right:6px"></i> Give Feedback</h3>
-        <p class="modal-subtitle" id="feedbackSubtitle">Session feedback</p>
+        <h3><i class="fas fa-comment-alt" style="color:var(--gold);margin-right:6px"></i> Write a Testimonial</h3>
+        <p class="modal-subtitle" id="feedbackSubtitle">Session testimonial</p>
         <form method="POST" action="feedback_action.php">
             <input type="hidden" name="sit_in_id" id="feedbackSitinId">
+            <input type="hidden" name="redirect" value="history">
             <div class="form-group">
                 <label>Rate your experience</label>
                 <div class="star-rating">
@@ -300,7 +301,7 @@ $feedbackList = $myFeedbacks->fetchAll();
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Submit Feedback</button>
+                <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Submit Testimonial</button>
             </div>
         </form>
     </div>

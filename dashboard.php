@@ -64,6 +64,12 @@ if (isset($_GET['msg'])) {
 if (isset($_GET['photo_success'])) {
     $success = "Profile photo updated successfully!";
 }
+if (isset($_GET['feedback_sent'])) {
+    $success = "Testimonial submitted successfully! Thank you.";
+}
+if (isset($_GET['feedback_error'])) {
+    $error = "Failed to submit testimonial. Please try again.";
+}
 
 // Check for existing pending session
 $pending_check = $pdo->prepare("SELECT id, pc_no, lab FROM sit_in_records WHERE id_number = ? AND status = 'Pending'");
@@ -343,6 +349,12 @@ if (!empty($student['photo']) && file_exists('uploads/photos/' . $student['photo
         .pc-legend .dot.g { background: #28a745; }
         .pc-legend .dot.r { background: #dc3545; }
         .pc-legend .dot.o { background: #fd7e14; }
+
+        /* Star Rating Form Styles */
+        .star-rating{display:flex;gap:6px;flex-direction:row-reverse;justify-content:flex-end}
+        .star-rating input{display:none}
+        .star-rating label{font-size:26px;color:#ddd;cursor:pointer;transition:color 0.15s}
+        .star-rating label:hover,.star-rating label:hover~label,.star-rating input:checked~label{color:var(--gold)}
     </style>
 </head>
 <body>
@@ -524,6 +536,31 @@ if (!empty($student['photo']) && file_exists('uploads/photos/' . $student['photo
 
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><i class="fas fa-pen-fancy"></i> Share Your Testimonial</div>
+            <div class="card-body">
+                <form method="POST" action="Student/feedback_action.php">
+                    <input type="hidden" name="sit_in_id" value="0">
+                    <input type="hidden" name="redirect" value="dashboard">
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label style="display:block;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">Rate Your Experience</label>
+                        <div class="star-rating">
+                            <input type="radio" name="rating" id="d5" value="5"><label for="d5" title="Excellent">★</label>
+                            <input type="radio" name="rating" id="d4" value="4"><label for="d4" title="Good">★</label>
+                            <input type="radio" name="rating" id="d3" value="3" checked><label for="d3" title="Okay">★</label>
+                            <input type="radio" name="rating" id="d2" value="2"><label for="d2" title="Poor">★</label>
+                            <input type="radio" name="rating" id="d1" value="1"><label for="d1" title="Terrible">★</label>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label style="display:block;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">Your Testimonial Message</label>
+                        <textarea name="message" placeholder="Share your overall computer studies sit-in experience..." required style="width:100%;padding:10px 12px;border:1.5px solid var(--border-color);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;outline:none;background:var(--bg);color:var(--text-main);resize:vertical;min-height:70px;"></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit" style="width:100%;padding:10px;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;"><i class="fas fa-paper-plane"></i> Submit Testimonial</button>
+                </form>
             </div>
         </div>
 

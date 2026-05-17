@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'Feedback';
+$pageTitle = 'Testimonials';
 require_once 'auth.php';
 
 // Mark ALL unread feedback as read now that admin is viewing
@@ -9,10 +9,10 @@ $feedbacks = $pdo->query("SELECT * FROM feedback ORDER BY created_at DESC")->fet
 include 'header.php';
 ?>
 <div class="page-content">
-    <div class="page-title">Student Feedback & Testimonials</div>
+    <div class="page-title">Student Testimonials</div>
     <div class="table-card">
-        <h3><i class="fas fa-star"></i> Feedback & Testimonials</h3>
-        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Note: Any feedback with a rating of 4 or 5 stars is automatically featured as a <strong>Testimonial</strong> on the Student Dashboard.</p>
+        <h3><i class="fas fa-star"></i> Student Testimonials</h3>
+        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Note: Testimonials with a rating of 4 or 5 stars are automatically featured on the Student Dashboard.</p>
         <table id="feedbackTable" class="dataTable">
             <thead>
                 <tr>
