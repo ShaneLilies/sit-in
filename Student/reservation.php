@@ -13,14 +13,15 @@ $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reserve'])) {
     $purpose  = trim($_POST['purpose'] ?? '');
     $lab      = trim($_POST['lab'] ?? '');
+    $pc_no    = trim($_POST['pc_no'] ?? '');
     $time_in  = trim($_POST['time_in'] ?? '');
     $date     = trim($_POST['date'] ?? '');
     $name     = $student['fname'].' '.$student['lname'];
-    if (empty($purpose) || empty($lab) || empty($date)) {
-        $error = "Please fill in all required fields.";
+    if (empty($purpose) || empty($lab) || empty($date) || empty($pc_no)) {
+        $error = "Please fill in all required fields and select a PC.";
     } else {
-        $pdo->prepare("INSERT INTO reservations (id_number, student_name, purpose, lab, reserved_date) VALUES (?,?,?,?,?)")
-            ->execute([$_SESSION['user'], $name, $purpose, $lab, $date]);
+        $pdo->prepare("INSERT INTO reservations (id_number, student_name, purpose, lab, pc_no, reserved_date) VALUES (?,?,?,?,?,?)")
+            ->execute([$_SESSION['user'], $name, $purpose, $lab, $pc_no, $date]);
         $success = "Reservation submitted successfully! Waiting for admin approval.";
     }
 }
@@ -111,6 +112,20 @@ $reservations = $myReservations->fetchAll();
         .badge-rejected{background:#f8d7da;color:#721c24}
 
         @media(max-width:900px){.two-col{grid-template-columns:1fr}}
+
+        /* PC GRID CSS */
+        .pc-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 8px; max-height: 200px; overflow-y: auto; padding: 5px; background:#faf8ff; border:1px solid #ddd; border-radius: 8px; }
+        .pc-box { aspect-ratio: 1; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; cursor: pointer; transition: transform 0.1s, opacity 0.1s; }
+        .pc-box.Available { background: #28a745; }
+        .pc-box.Occupied { background: #dc3545; cursor: not-allowed; opacity: 0.6; }
+        .pc-box.Maintenance { background: #fd7e14; cursor: not-allowed; opacity: 0.6; }
+        .pc-box.selected { transform: scale(1.15); box-shadow: 0 0 0 3px var(--purple); z-index: 2; }
+        .pc-legend { display: flex; gap: 15px; font-size: 11px; color: #777; margin-top: 8px; justify-content:center;}
+        .pc-legend span { display: flex; align-items: center; gap: 4px; }
+        .pc-legend .dot { width: 10px; height: 10px; border-radius: 2px; }
+        .pc-legend .dot.g { background: #28a745; }
+        .pc-legend .dot.r { background: #dc3545; }
+        .pc-legend .dot.o { background: #fd7e14; }
     </style>
 </head>
 <body>
@@ -163,13 +178,25 @@ $reservations = $myReservations->fetchAll();
                 </div>
                 <div class="field-group">
                     <label>Laboratory</label>
-                    <select name="lab">
+                    <select name="lab" id="labSelect" required onchange="loadPCs()">
+                        <option value="">-- Select Lab --</option>
                         <option>524</option>
                         <option>526</option>
                         <option>528</option>
                         <option>530</option>
                         <option>542</option>
                     </select>
+                </div>
+                <div class="field-group" id="pcSelectionGroup" style="display:none;">
+                    <label>Select PC</label>
+                    <div id="pcGrid" class="pc-grid"></div>
+                    <input type="hidden" name="pc_no" id="selectedPcInput" required>
+                    <div class="pc-legend">
+                        <span><div class="dot g"></div> Available</span>
+                        <span><div class="dot r"></div> Occupied</span>
+                        <span><div class="dot o"></div> Maintenance</span>
+                    </div>
+                    <p id="pcSelectionText" style="font-size:12px;color:var(--text-muted);margin-top:8px;text-align:center;">Please click an available green PC.</p>
                 </div>
                 <div class="field-group">
                     <label>Preferred Time</label>
@@ -183,7 +210,7 @@ $reservations = $myReservations->fetchAll();
                     <label>Remaining Sessions</label>
                     <input type="text" value="<?=htmlspecialchars($student['remaining_session'])?> sessions" readonly>
                 </div>
-                <button type="submit" name="reserve" class="btn-reserve"><i class="fas fa-calendar-check"></i> Submit Reservation</button>
+                <button type="submit" name="reserve" class="btn-reserve" id="submitBtn" disabled><i class="fas fa-calendar-check"></i> Submit Reservation</button>
             </form>
         </div>
 
@@ -198,6 +225,7 @@ $reservations = $myReservations->fetchAll();
                     <tr>
                         <th>Purpose</th>
                         <th>Lab</th>
+                        <th>PC No.</th>
                         <th>Date</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -208,6 +236,7 @@ $reservations = $myReservations->fetchAll();
                 <tr>
                     <td><?=htmlspecialchars($r['purpose'])?></td>
                     <td><?=htmlspecialchars($r['lab'])?></td>
+                    <td><?=htmlspecialchars($r['pc_no'] ?? 'N/A')?></td>
                     <td><?=htmlspecialchars($r['reserved_date'])?></td>
                     <td>
                         <span class="badge badge-<?=strtolower($r['status'])?>" <?= $r['status']==='Disabled' ? 'style="background:#6c757d;color:#fff"' : '' ?>>
@@ -231,5 +260,56 @@ $reservations = $myReservations->fetchAll();
         </div>
     </div>
 </div>
+<script>
+// PC Loading Logic
+function loadPCs() {
+    const lab = document.getElementById('labSelect').value;
+    const group = document.getElementById('pcSelectionGroup');
+    const grid = document.getElementById('pcGrid');
+    const input = document.getElementById('selectedPcInput');
+    const btn = document.getElementById('submitBtn');
+    const text = document.getElementById('pcSelectionText');
+    
+    if(!lab) {
+        group.style.display = 'none';
+        input.value = '';
+        btn.disabled = true;
+        return;
+    }
+    
+    group.style.display = 'block';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;font-size:12px;color:#777">Loading PCs...</div>';
+    input.value = '';
+    btn.disabled = true;
+    text.innerHTML = 'Please click an available green PC.';
+
+    fetch('../get_pcs.php?lab=' + encodeURIComponent(lab))
+        .then(response => response.json())
+        .then(data => {
+            grid.innerHTML = '';
+            data.forEach(pc => {
+                const box = document.createElement('div');
+                box.className = 'pc-box ' + pc.status;
+                box.innerText = pc.pc_number;
+                
+                if(pc.status === 'Available') {
+                    box.onclick = function() {
+                        // clear previous selection
+                        document.querySelectorAll('.pc-box').forEach(b => b.classList.remove('selected'));
+                        box.classList.add('selected');
+                        input.value = pc.pc_number;
+                        btn.disabled = false;
+                        text.innerHTML = 'Selected <b>PC ' + pc.pc_number + '</b>';
+                    };
+                } else {
+                    box.onclick = function() {
+                        alert('PC ' + pc.pc_number + ' is currently ' + pc.status + '.');
+                    };
+                }
+                grid.appendChild(box);
+            });
+        });
+}
+</script>
 </body>
 </html>

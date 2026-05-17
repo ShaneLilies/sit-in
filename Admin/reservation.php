@@ -63,7 +63,7 @@ include 'header.php';
             <thead>
                 <tr>
                     <th>ID</th><th>ID Number</th><th>Student Name</th>
-                    <th>Purpose</th><th>Lab</th><th>Date</th><th>Status</th><th>Actions</th>
+                    <th>Purpose</th><th>Lab</th><th>PC No.</th><th>Date</th><th>Status</th><th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -74,6 +74,7 @@ include 'header.php';
                 <td><?= htmlspecialchars($r['student_name']) ?></td>
                 <td><?= htmlspecialchars($r['purpose']) ?></td>
                 <td><?= htmlspecialchars($r['lab']) ?></td>
+                <td><?= htmlspecialchars($r['pc_no'] ?? 'N/A') ?></td>
                 <td><?= htmlspecialchars($r['reserved_date']) ?></td>
                 <td><span class="badge badge-<?= strtolower($r['status']) ?>"><?= $r['status'] ?></span></td>
                 <td style="display:flex;gap:6px;flex-wrap:wrap">
@@ -90,7 +91,7 @@ include 'header.php';
             </tr>
             <?php endforeach; ?>
             <?php if(empty($reservations)): ?>
-            <tr><td colspan="8" style="text-align:center;color:#999;padding:20px">No reservation requests yet.</td></tr>
+            <tr><td colspan="9" style="text-align:center;color:#999;padding:20px">No reservation requests yet.</td></tr>
             <?php endif; ?>
             </tbody>
         </table>
@@ -98,6 +99,6 @@ include 'header.php';
 </div>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script>$(document).ready(function(){ $('#resTable').DataTable({ order: [[5,'desc']] }); });</script>
+<script>$(document).ready(function(){ $('#resTable').DataTable({ order: [[6,'desc']] }); });</script>
 </body>
 </html>
