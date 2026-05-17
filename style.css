@@ -16,12 +16,29 @@
     --bg:           #f0ecf8;
     --text:         #333333;
     --muted:        #888888;
+    --border-color: #ede6f5;
+    --hero-bg:      linear-gradient(160deg, #f5f0ff 0%, #ede5f8 55%, #f9f3e0 100%);
+}
+
+[data-theme="dark"] {
+    --purple:       #8e60c2;
+    --purple-dark:  #241242;
+    --purple-light: #ac84de;
+    --gold:         #f5c95d;
+    --gold-dark:    #dfa212;
+    --white:        #1a0f2e;
+    --bg:           #0e0717;
+    --text:         #e0dced;
+    --muted:        #9184a8;
+    --border-color: #342054;
+    --hero-bg:      linear-gradient(160deg, #0e0717 0%, #1c0e35 55%, #2a1b0a 100%);
 }
 
 body {
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     background: var(--bg);
+    color: var(--text);
 }
 
 /* ============================================
@@ -84,7 +101,7 @@ body {
     display: none;
     position: absolute;
     top: 100%; left: 0;
-    background: #fff;
+    background: var(--white);
     border-radius: 6px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     min-width: 160px;
@@ -94,11 +111,11 @@ body {
 .dropdown:hover .dropdown-menu { display: block; }
 .dropdown-menu a {
     display: block;
-    color: #333 !important;
+    color: var(--text) !important;
     padding: 10px 16px;
     font-size: 13px;
 }
-.dropdown-menu a:hover { background: #f5f0ff; color: var(--purple) !important; }
+.dropdown-menu a:hover { background: var(--bg); color: var(--purple) !important; }
 
 /* ============================================
    HOME PAGE - HERO
@@ -109,7 +126,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 40px 60px;
-    background: linear-gradient(160deg, #f5f0ff 0%, #ede5f8 55%, #f9f3e0 100%);
+    background: var(--hero-bg);
 }
 .hero-content {
     max-width: 1100px;
@@ -129,7 +146,7 @@ body {
 .hero-text h1 span { color: var(--gold-dark); }
 .hero-text p {
     font-size: 15px;
-    color: #666;
+    color: var(--muted);
     line-height: 1.75;
     margin-bottom: 32px;
     max-width: 440px;

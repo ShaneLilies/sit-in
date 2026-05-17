@@ -39,11 +39,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCS | Create Account</title>
+    <script>
+    // Immediate Theme Applier to prevent flickering
+    (function() {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@700;800&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--purple:#5B2D8E;--pdark:#3D1A6E;--plight:#7B4BB8;--gold:#F0B429;--gdark:#C88F0A;--bg:#f5f0ff}
-        body{font-family:'Inter',sans-serif;min-height:100vh;background:var(--bg);display:flex;flex-direction:column}
+        :root{
+            --purple:#5B2D8E;
+            --pdark:#3D1A6E;
+            --plight:#7B4BB8;
+            --gold:#F0B429;
+            --gdark:#C88F0A;
+            --bg:#f5f0ff;
+            --white:#fff;
+            --input-bg:#faf8ff;
+            --text-main:#333333;
+            --text-muted:#888888;
+            --border-color:#ede6f5;
+        }
+        [data-theme="dark"]{
+            --purple:#8e60c2;
+            --pdark:#241242;
+            --plight:#ac84de;
+            --gold:#f5c95d;
+            --gdark:#dfa212;
+            --bg:#0e0717;
+            --white:#1a0f2e;
+            --input-bg:#0c0614;
+            --text-main:#e0dced;
+            --text-muted:#9184a8;
+            --border-color:#342054;
+        }
+        body{font-family:'Inter',sans-serif;min-height:100vh;background:var(--bg);color:var(--text-main);display:flex;flex-direction:column}
         .navbar{background:var(--pdark);padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--gold);box-shadow:0 2px 12px rgba(0,0,0,0.2)}
         .navbar-brand{color:#fff;font-size:14px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:10px}
         .navbar-brand img{width:36px;height:36px;object-fit:contain;border-radius:50%}
@@ -52,33 +87,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .nav-links a:hover{background:rgba(255,255,255,0.15)}
         .btn-nav{background:var(--gold)!important;color:var(--pdark)!important;font-weight:700!important;border-radius:6px!important}
         .dropdown{position:relative}.dropdown-toggle{cursor:pointer}.dropdown-toggle::after{content:' ▾';font-size:10px}
-        .dropdown-menu{display:none;position:absolute;top:100%;left:0;background:#fff;border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,0.2);min-width:160px;z-index:1000;overflow:hidden}
+        .dropdown-menu{display:none;position:absolute;top:100%;left:0;background:var(--white);border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,0.2);min-width:160px;z-index:1000;overflow:hidden}
         .dropdown:hover .dropdown-menu{display:block}
-        .dropdown-menu a{display:block;color:#333!important;padding:10px 16px;font-size:13px}
+        .dropdown-menu a{display:block;color:var(--text-main)!important;padding:10px 16px;font-size:13px}
+        .dropdown-menu a:hover{background:var(--bg);color:var(--purple)!important}
         .page-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
-        .register-box{background:#fff;border-radius:20px;padding:48px 52px;width:100%;max-width:560px;box-shadow:0 8px 40px rgba(91,45,142,0.12);animation:fadeUp 0.5s ease}
+        .register-box{background:var(--white);color:var(--text-main);border-radius:20px;padding:48px 52px;width:100%;max-width:560px;box-shadow:0 8px 40px rgba(91,45,142,0.12);animation:fadeUp 0.5s ease}
         @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-        .reg-title{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:#1a1a2e;margin-bottom:6px}
-        .reg-subtitle{font-size:14px;color:#888;margin-bottom:32px}
+        .reg-title{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:var(--text-main);margin-bottom:6px}
+        .reg-subtitle{font-size:14px;color:var(--text-muted);margin-bottom:32px}
         .section-label{display:flex;align-items:center;gap:12px;margin:24px 0 18px}
         .section-label span{font-size:11.5px;font-weight:700;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap}
-        .section-label::after{content:'';flex:1;height:1px;background:#e8e0f0}
+        .section-label::after{content:'';flex:1;height:1px;background:var(--border-color)}
         .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
         .form-grid.single{grid-template-columns:1fr}
         .field{display:flex;flex-direction:column;gap:6px}
-        .field label{font-size:11px;font-weight:700;color:#555;letter-spacing:1px;text-transform:uppercase}
-        .field input,.field select{padding:12px 16px;border:2px solid #e8e0f0;border-radius:12px;font-size:14px;font-family:'Inter',sans-serif;color:#1a1a2e;background:#faf8ff;outline:none;transition:border-color 0.2s,box-shadow 0.2s}
-        .field input:focus,.field select:focus{border-color:var(--purple);box-shadow:0 0 0 4px rgba(91,45,142,0.08);background:#fff}
-        .field input::placeholder{color:#bbb}
-        .field select{color:#aaa;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-color:#faf8ff}
-        .field select.selected{color:#1a1a2e}
+        .field label{font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase}
+        .field input,.field select{padding:12px 16px;border:2px solid var(--border-color);border-radius:12px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text-main);background:var(--input-bg);outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+        .field input:focus,.field select:focus{border-color:var(--purple);box-shadow:0 0 0 4px rgba(91,45,142,0.08);background:var(--white)}
+        .field input::placeholder{color:var(--text-muted);opacity:0.7}
+        .field select{color:var(--text-muted);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-color:var(--input-bg)}
+        .field select.selected{color:var(--text-main)}
         .alert{padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:20px;text-align:center}
         .alert-error{background:#fff0f0;border:1.5px solid #ffcccc;color:#c0392b}
         .alert-success{background:#f0fff4;border:1.5px solid #b2eec8;color:#1a7a3a}
         .btn-create{width:100%;padding:15px;background:linear-gradient(90deg,var(--pdark),var(--purple));color:#fff;font-size:15px;font-weight:700;font-family:'Sora',sans-serif;border:none;border-radius:12px;cursor:pointer;margin-top:28px;letter-spacing:0.5px;transition:all 0.25s;box-shadow:0 6px 20px rgba(61,26,110,0.3)}
         .btn-create:hover{background:linear-gradient(90deg,var(--purple),var(--plight));transform:translateY(-2px);box-shadow:0 10px 28px rgba(91,45,142,0.4)}
-        .signin-link{text-align:center;margin-top:16px;font-size:13.5px;color:#888}
-        .signin-link a{color:var(--pdark);font-weight:700;text-decoration:underline}
+        .signin-link{text-align:center;margin-top:16px;font-size:13.5px;color:var(--text-muted)}
+        .signin-link a{color:var(--purple);font-weight:700;text-decoration:underline}
         .signin-link a:hover{color:var(--gold)}
         @media(max-width:600px){.register-box{padding:32px 24px}.form-grid{grid-template-columns:1fr}}
     </style>
@@ -92,6 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <li><a href="#">About</a></li>
         <li><a href="login.php">Login</a></li>
         <li><a href="Register.php" class="btn-nav">Register</a></li>
+        <li><a href="#" id="themeToggle" style="cursor:pointer"><i class="fas fa-moon"></i> Theme</a></li>
     </ul>
 </nav>
 <div class="page-wrap">
@@ -138,5 +175,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="signin-link">Already have an account? <a href="login.php">Sign in here</a></div>
     </div>
 </div>
+<script>
+// Dark Mode Toggle Logic
+document.addEventListener("DOMContentLoaded", function() {
+    const themeToggle = document.getElementById('themeToggle');
+    if (!themeToggle) return;
+    const root = document.documentElement;
+    const icon = themeToggle.querySelector('i');
+
+    // Update icon initially
+    if(root.getAttribute('data-theme') === 'dark') {
+        icon.classList.replace('fa-moon', 'fa-sun');
+    }
+
+    themeToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(root.getAttribute('data-theme') === 'dark') {
+            root.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            icon.classList.replace('fa-sun', 'fa-moon');
+        } else {
+            root.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+    });
+});
+</script>
 </body>
 </html>

@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCS Admin | <?= $pageTitle ?? 'Dashboard' ?></title>
+    <script>
+    // Immediate Theme Applier to prevent flickering
+    (function() {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -18,8 +28,25 @@
             --gdark:#C88F0A;
             --bg:#f5f0ff;
             --white:#fff;
+            --input-bg:#faf8ff;
+            --text-main:#333333;
+            --text-muted:#888888;
+            --border-color:#ede6f5;
         }
-        body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh}
+        [data-theme="dark"]{
+            --purple:#8e60c2;
+            --pdark:#241242;
+            --plight:#ac84de;
+            --gold:#f5c95d;
+            --gdark:#dfa212;
+            --bg:#0e0717;
+            --white:#1a0f2e;
+            --input-bg:#0c0614;
+            --text-main:#e0dced;
+            --text-muted:#9184a8;
+            --border-color:#342054;
+        }
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text-main);min-height:100vh}
 
         /* NAVBAR */
         .topnav{
@@ -94,27 +121,30 @@
 
         /* STAT CARDS */
         .stat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:28px}
-        .stat-card{background:#fff;border-radius:12px;padding:20px 24px;box-shadow:0 2px 12px rgba(91,45,142,0.10);border-top:4px solid var(--purple);}
+        .stat-card{background:var(--white);color:var(--text-main);border-radius:12px;padding:20px 24px;box-shadow:0 2px 12px rgba(91,45,142,0.10);border-top:4px solid var(--purple);}
         .stat-card.green{border-top-color:#28a745}
         .stat-card.gold{border-top-color:var(--gold)}
-        .stat-card h3{font-size:13px;color:#888;font-weight:500;margin-bottom:6px}
+        .stat-card h3{font-size:13px;color:var(--text-muted);font-weight:500;margin-bottom:6px}
         .stat-card .num{font-size:32px;font-weight:700;color:var(--pdark)}
         .stat-card.green .num{color:#28a745}
         .stat-card.gold .num{color:var(--gdark)}
 
         /* TABLE CARDS */
-        .table-card{background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(91,45,142,0.10);margin-bottom:24px;}
+        .table-card{background:var(--white);color:var(--text-main);border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(91,45,142,0.10);margin-bottom:24px;}
         .table-card h3{font-size:15px;font-weight:700;color:var(--pdark);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
         .table-card h3 i{color:var(--gold)}
 
         /* DATATABLES */
-        table.dataTable{width:100%!important;border-collapse:collapse}
+        table.dataTable{width:100%!important;border-collapse:collapse;color:var(--text-main)}
         table.dataTable thead th{background:linear-gradient(90deg,var(--pdark),var(--purple));color:#fff;padding:10px 14px;font-size:13px;font-weight:600;border:none;}
-        table.dataTable tbody tr:nth-child(even){background:#f8f4ff}
-        table.dataTable tbody tr:hover{background:#f0e8ff}
-        table.dataTable tbody td{padding:9px 14px;font-size:13px;border-bottom:1px solid #ede6f5}
-        .dataTables_wrapper .dataTables_filter input{border:1.5px solid #ccc;border-radius:6px;padding:5px 10px;font-size:13px;outline:none;}
+        table.dataTable tbody tr{background:var(--white)}
+        table.dataTable tbody tr:nth-child(even){background:var(--white);opacity:0.95}
+        table.dataTable tbody tr:hover{background:var(--bg)!important;color:var(--text-main)}
+        table.dataTable tbody td{padding:9px 14px;font-size:13px;border-bottom:1px solid var(--border-color)}
+        .dataTables_wrapper{color:var(--text-main)!important}
+        .dataTables_wrapper .dataTables_filter input{border:1.5px solid var(--border-color);background:var(--input-bg);color:var(--text-main);border-radius:6px;padding:5px 10px;font-size:13px;outline:none;}
         .dataTables_wrapper .dataTables_filter input:focus{border-color:var(--purple)}
+        .dataTables_wrapper .dataTables_paginate .paginate_button{color:var(--text-main)!important}
         .dataTables_wrapper .dataTables_paginate .paginate_button.current,
         .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover{background:var(--purple)!important;color:#fff!important;border-color:var(--purple)!important;border-radius:5px;}
         .dataTables_wrapper .dataTables_paginate .paginate_button:hover{background:var(--bg)!important;color:var(--pdark)!important;border-color:var(--plight)!important;border-radius:5px;}
@@ -131,7 +161,7 @@
         /* MODAL */
         .modal-overlay{display:none;position:fixed;inset:0;background:rgba(61,26,110,0.55);z-index:9999;align-items:center;justify-content:center}
         .modal-overlay.show{display:flex}
-        .modal-box{background:#fff;border-radius:16px;padding:28px 32px;width:100%;max-width:480px;position:relative;box-shadow:0 20px 60px rgba(91,45,142,0.35);}
+        .modal-box{background:var(--white);color:var(--text-main);border-radius:16px;padding:28px 32px;width:100%;max-width:480px;position:relative;box-shadow:0 20px 60px rgba(91,45,142,0.35);}
         .modal-box h3{font-size:17px;font-weight:700;color:var(--pdark);margin-bottom:18px;border-left:3px solid var(--gold);padding-left:10px}
         .modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#999}
         .modal-close:hover{color:var(--pdark)}
@@ -139,15 +169,15 @@
         /* FORMS */
         .form-group{margin-bottom:14px}
         .form-group label{display:block;font-size:12.5px;font-weight:600;color:var(--pdark);margin-bottom:5px}
-        .form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 12px;border:1.5px solid #ddd;border-radius:7px;font-size:13.5px;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s;background:#faf8ff;}
-        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(91,45,142,0.08);background:#fff;}
+        .form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border-color);border-radius:7px;font-size:13.5px;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s;background:var(--input-bg);color:var(--text-main);}
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(91,45,142,0.08);background:var(--white);}
         .modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
 
         /* ANNOUNCEMENTS */
         .announce-list{margin-top:12px}
-        .announce-item{border-bottom:1px solid #ede6f5;padding:10px 0}
+        .announce-item{border-bottom:1px solid var(--border-color);padding:10px 0}
         .announce-item .meta{font-weight:600;color:var(--pdark);margin-bottom:3px;font-size:12.5px}
-        .announce-item .content{color:#555;font-size:13px;background:#f8f4ff;border-radius:8px;padding:8px 12px;border-left:3px solid var(--gold)}
+        .announce-item .content{color:var(--text-main);font-size:13px;background:var(--input-bg);border-radius:8px;padding:8px 12px;border-left:3px solid var(--gold)}
 
         /* BADGES */
         .badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
@@ -207,6 +237,34 @@ try {
             </a>
         </li>
         <li><a href="reservation.php" <?=($pageTitle??'')==='Reservation'?'class="active"':''?>>Reservation</a></li>
+        <li><a href="#" id="themeToggle" style="cursor:pointer"><i class="fas fa-moon"></i> Theme</a></li>
         <li><a href="../logout.php" class="btn-logout-nav">Log out</a></li>
     </ul>
 </nav>
+<script>
+// Dark Mode Toggle Logic
+document.addEventListener("DOMContentLoaded", function() {
+    const themeToggle = document.getElementById('themeToggle');
+    if (!themeToggle) return;
+    const root = document.documentElement;
+    const icon = themeToggle.querySelector('i');
+
+    // Update icon initially
+    if(root.getAttribute('data-theme') === 'dark') {
+        icon.classList.replace('fa-moon', 'fa-sun');
+    }
+
+    themeToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(root.getAttribute('data-theme') === 'dark') {
+            root.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            icon.classList.replace('fa-sun', 'fa-moon');
+        } else {
+            root.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+    });
+});
+</script>

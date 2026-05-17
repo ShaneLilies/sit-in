@@ -34,13 +34,48 @@ $feedbackList = $myFeedbacks->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCS | History</title>
+    <script>
+    // Immediate Theme Applier to prevent flickering
+    (function() {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--purple:#5B2D8E;--pdark:#3D1A6E;--plight:#7B4BB8;--gold:#F0B429;--gdark:#C88F0A;--bg:#f5f0ff}
-        body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh}
+        :root{
+            --purple:#5B2D8E;
+            --pdark:#3D1A6E;
+            --plight:#7B4BB8;
+            --gold:#F0B429;
+            --gdark:#C88F0A;
+            --bg:#f5f0ff;
+            --white:#fff;
+            --input-bg:#faf8ff;
+            --text-main:#333333;
+            --text-muted:#888888;
+            --border-color:#ede6f5;
+        }
+        [data-theme="dark"]{
+            --purple:#8e60c2;
+            --pdark:#241242;
+            --plight:#ac84de;
+            --gold:#f5c95d;
+            --gdark:#dfa212;
+            --bg:#0e0717;
+            --white:#1a0f2e;
+            --input-bg:#0c0614;
+            --text-main:#e0dced;
+            --text-muted:#9184a8;
+            --border-color:#342054;
+        }
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text-main);min-height:100vh}
 
         .navbar{background:var(--pdark);padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--gold);box-shadow:0 2px 12px rgba(0,0,0,0.25)}
         .navbar-brand{color:#fff;font-size:14px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:10px}
@@ -52,24 +87,27 @@ $feedbackList = $myFeedbacks->fetchAll();
         .btn-logout-nav:hover{background:var(--gdark)!important;color:#fff!important}
         .dropdown{position:relative}.dropdown-toggle{cursor:pointer}
         .dropdown-toggle::after{content:' ▾';font-size:10px}
-        .dropdown-menu{display:none;position:absolute;top:100%;left:0;background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(91,45,142,0.2);min-width:160px;z-index:1000;overflow:hidden}
+        .dropdown-menu{display:none;position:absolute;top:100%;left:0;background:var(--white);border-radius:8px;box-shadow:0 4px 20px rgba(91,45,142,0.2);min-width:160px;z-index:1000;overflow:hidden}
         .dropdown:hover .dropdown-menu{display:block}
-        .dropdown-menu a{display:block;color:#333!important;padding:10px 16px;font-size:13px}
+        .dropdown-menu a{display:block;color:var(--text-main)!important;padding:10px 16px;font-size:13px}
         .dropdown-menu a:hover{background:var(--bg);color:var(--purple)!important}
 
         .page-content{padding:28px 32px;max-width:1200px;margin:0 auto}
         .page-title{font-size:22px;font-weight:700;color:var(--pdark);margin-bottom:20px;border-left:4px solid var(--gold);padding-left:12px}
-        .table-card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 20px rgba(91,45,142,0.10);margin-bottom:24px}
+        .table-card{background:var(--white);color:var(--text-main);border-radius:16px;padding:24px;box-shadow:0 4px 20px rgba(91,45,142,0.10);margin-bottom:24px}
         .table-card h3{font-size:15px;font-weight:700;color:var(--pdark);margin-bottom:16px;display:flex;align-items:center;gap:8px}
         .table-card h3 i{color:var(--gold)}
 
-        table.dataTable{width:100%!important;border-collapse:collapse}
+        table.dataTable{width:100%!important;border-collapse:collapse;color:var(--text-main)}
         table.dataTable thead th{background:linear-gradient(90deg,var(--pdark),var(--purple));color:#fff;padding:10px 14px;font-size:13px;font-weight:600;border:none}
-        table.dataTable tbody tr:nth-child(even){background:#f8f4ff}
-        table.dataTable tbody tr:hover{background:#f0e8ff}
-        table.dataTable tbody td{padding:9px 14px;font-size:13px;border-bottom:1px solid #ede6f5}
-        .dataTables_wrapper .dataTables_filter input{border:1.5px solid #ccc;border-radius:6px;padding:5px 10px;font-size:13px;outline:none}
+        table.dataTable tbody tr{background:var(--white)}
+        table.dataTable tbody tr:nth-child(even){background:var(--white);opacity:0.95}
+        table.dataTable tbody tr:hover{background:var(--bg)!important;color:var(--text-main)}
+        table.dataTable tbody td{padding:9px 14px;font-size:13px;border-bottom:1px solid var(--border-color)}
+        .dataTables_wrapper{color:var(--text-main)!important}
+        .dataTables_wrapper .dataTables_filter input{border:1.5px solid var(--border-color);background:var(--input-bg);color:var(--text-main);border-radius:6px;padding:5px 10px;font-size:13px;outline:none}
         .dataTables_wrapper .dataTables_filter input:focus{border-color:var(--purple)}
+        .dataTables_wrapper .dataTables_paginate .paginate_button{color:var(--text-main)!important}
         .dataTables_wrapper .dataTables_paginate .paginate_button.current{background:var(--purple)!important;color:#fff!important;border-color:var(--purple)!important;border-radius:5px}
         .dataTables_wrapper .dataTables_paginate .paginate_button:hover{background:var(--bg)!important;color:var(--pdark)!important;border-radius:5px}
 
@@ -97,16 +135,16 @@ $feedbackList = $myFeedbacks->fetchAll();
         /* Modal */
         .modal-overlay{display:none;position:fixed;inset:0;background:rgba(61,26,110,0.55);z-index:9999;align-items:center;justify-content:center}
         .modal-overlay.show{display:flex}
-        .modal-box{background:#fff;border-radius:16px;padding:28px 32px;width:100%;max-width:460px;position:relative;box-shadow:0 20px 60px rgba(91,45,142,0.35);animation:slideUp 0.3s ease}
+        .modal-box{background:var(--white);color:var(--text-main);border-radius:16px;padding:28px 32px;width:100%;max-width:460px;position:relative;box-shadow:0 20px 60px rgba(91,45,142,0.35);animation:slideUp 0.3s ease}
         @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         .modal-box h3{font-size:17px;font-weight:700;color:var(--pdark);margin-bottom:6px;border-left:3px solid var(--gold);padding-left:10px}
-        .modal-subtitle{font-size:12.5px;color:#999;margin-bottom:20px;padding-left:13px}
+        .modal-subtitle{font-size:12.5px;color:var(--text-muted);margin-bottom:20px;padding-left:13px}
         .modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#999}
         .modal-close:hover{color:var(--pdark)}
         .form-group{margin-bottom:16px}
         .form-group label{display:block;font-size:12px;font-weight:700;color:var(--pdark);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
-        .form-group textarea{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s;background:#faf8ff;resize:vertical;min-height:100px}
-        .form-group textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(91,45,142,0.08);background:#fff}
+        .form-group textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border-color);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s;background:var(--input-bg);color:var(--text-main);resize:vertical;min-height:100px}
+        .form-group textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(91,45,142,0.08);background:var(--white)}
 
         /* Star rating */
         .star-rating{display:flex;gap:6px;flex-direction:row-reverse;justify-content:flex-end}
@@ -115,7 +153,7 @@ $feedbackList = $myFeedbacks->fetchAll();
         .star-rating label:hover,.star-rating label:hover~label,.star-rating input:checked~label{color:var(--gold)}
 
         .modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
-        .btn-cancel{padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:#eee;color:#555;font-family:'Inter',sans-serif}
+        .btn-cancel{padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:var(--input-bg);color:var(--text-main);font-family:'Inter',sans-serif}
         .btn-submit{padding:9px 22px;border-radius:8px;font-size:13px;font-weight:700;border:none;cursor:pointer;background:linear-gradient(90deg,var(--pdark),var(--purple));color:#fff;font-family:'Inter',sans-serif}
         .btn-submit:hover{background:linear-gradient(90deg,var(--purple),var(--plight))}
 
@@ -139,6 +177,7 @@ $feedbackList = $myFeedbacks->fetchAll();
         <li><a href="edit_profile.php">Edit Profile</a></li>
         <li><a href="history.php" class="active">History</a></li>
         <li><a href="reservation.php">Reservation</a></li>
+        <li><a href="#" id="themeToggle" style="cursor:pointer"><i class="fas fa-moon"></i> Theme</a></li>
         <li><a href="../logout.php" class="btn-logout-nav">Log out</a></li>
     </ul>
 </nav>
@@ -285,6 +324,32 @@ function closeModal() {
 // Close modal on overlay click
 document.getElementById('feedbackModal').addEventListener('click', function(e){
     if(e.target === this) closeModal();
+});
+
+// Dark Mode Toggle Logic
+document.addEventListener("DOMContentLoaded", function() {
+    const themeToggle = document.getElementById('themeToggle');
+    if (!themeToggle) return;
+    const root = document.documentElement;
+    const icon = themeToggle.querySelector('i');
+
+    // Update icon initially
+    if(root.getAttribute('data-theme') === 'dark') {
+        icon.classList.replace('fa-moon', 'fa-sun');
+    }
+
+    themeToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(root.getAttribute('data-theme') === 'dark') {
+            root.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            icon.classList.replace('fa-sun', 'fa-moon');
+        } else {
+            root.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+    });
 });
 </script>
 </body>

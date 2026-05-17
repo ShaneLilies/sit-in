@@ -60,12 +60,47 @@ $reservations = $myReservations->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCS | Reservation</title>
+    <script>
+    // Immediate Theme Applier to prevent flickering
+    (function() {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--purple:#5B2D8E;--pdark:#3D1A6E;--plight:#7B4BB8;--gold:#F0B429;--gdark:#C88F0A;--bg:#f5f0ff}
-        body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh}
+        :root{
+            --purple:#5B2D8E;
+            --pdark:#3D1A6E;
+            --plight:#7B4BB8;
+            --gold:#F0B429;
+            --gdark:#C88F0A;
+            --bg:#f5f0ff;
+            --white:#fff;
+            --input-bg:#faf8ff;
+            --text-main:#333333;
+            --text-muted:#888888;
+            --border-color:#ede6f5;
+        }
+        [data-theme="dark"]{
+            --purple:#8e60c2;
+            --pdark:#241242;
+            --plight:#ac84de;
+            --gold:#f5c95d;
+            --gdark:#dfa212;
+            --bg:#0e0717;
+            --white:#1a0f2e;
+            --input-bg:#0c0614;
+            --text-main:#e0dced;
+            --text-muted:#9184a8;
+            --border-color:#342054;
+        }
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text-main);min-height:100vh}
 
         .navbar{background:var(--pdark);padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--gold);box-shadow:0 2px 12px rgba(0,0,0,0.25)}
         .navbar-brand{color:#fff;font-size:14px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:10px}
@@ -77,24 +112,24 @@ $reservations = $myReservations->fetchAll();
         .btn-logout-nav:hover{background:var(--gdark)!important;color:#fff!important}
         .dropdown{position:relative}.dropdown-toggle{cursor:pointer}
         .dropdown-toggle::after{content:' ▾';font-size:10px}
-        .dropdown-menu{display:none;position:absolute;top:100%;left:0;background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(91,45,142,0.2);min-width:160px;z-index:1000;overflow:hidden}
+        .dropdown-menu{display:none;position:absolute;top:100%;left:0;background:var(--white);border-radius:8px;box-shadow:0 4px 20px rgba(91,45,142,0.2);min-width:160px;z-index:1000;overflow:hidden}
         .dropdown:hover .dropdown-menu{display:block}
-        .dropdown-menu a{display:block;color:#333!important;padding:10px 16px;font-size:13px}
+        .dropdown-menu a{display:block;color:var(--text-main)!important;padding:10px 16px;font-size:13px}
         .dropdown-menu a:hover{background:var(--bg);color:var(--purple)!important}
 
         .page-content{padding:28px 32px;max-width:1100px;margin:0 auto}
         .page-title{font-size:22px;font-weight:700;color:var(--pdark);margin-bottom:20px;border-left:4px solid var(--gold);padding-left:12px}
 
         .two-col{display:grid;grid-template-columns:420px 1fr;gap:24px;align-items:start}
-        .card{background:#fff;border-radius:16px;padding:28px;box-shadow:0 4px 20px rgba(91,45,142,0.10);margin-bottom:24px}
-        .card-header{font-size:15px;font-weight:700;color:var(--pdark);margin-bottom:20px;display:flex;align-items:center;gap:8px;border-bottom:2px solid var(--bg);padding-bottom:12px}
+        .card{background:var(--white);color:var(--text-main);border-radius:16px;padding:28px;box-shadow:0 4px 20px rgba(91,45,142,0.10);margin-bottom:24px}
+        .card-header{font-size:15px;font-weight:700;color:var(--pdark);margin-bottom:20px;display:flex;align-items:center;gap:8px;border-bottom:2px solid var(--border-color);padding-bottom:12px}
         .card-header i{color:var(--gold)}
 
         .field-group{margin-bottom:16px}
         .field-group label{display:block;font-size:11.5px;font-weight:700;color:var(--pdark);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:5px}
-        .field-group input,.field-group select{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:13.5px;font-family:'Inter',sans-serif;color:#333;outline:none;transition:border-color 0.2s,box-shadow 0.2s;background:#faf8ff}
-        .field-group input:focus,.field-group select:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(91,45,142,0.08);background:#fff}
-        .field-group input[readonly]{background:#f0ecf8;color:#777;cursor:not-allowed}
+        .field-group input,.field-group select{width:100%;padding:10px 12px;border:1.5px solid var(--border-color);border-radius:10px;font-size:13.5px;font-family:'Inter',sans-serif;color:var(--text-main);outline:none;transition:border-color 0.2s,box-shadow 0.2s;background:var(--input-bg)}
+        .field-group input:focus,.field-group select:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(91,45,142,0.08);background:var(--white)}
+        .field-group input[readonly]{background:var(--bg);color:var(--text-muted);cursor:not-allowed}
 
         .btn-reserve{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,var(--pdark),var(--purple));color:#fff;font-size:14px;font-weight:700;padding:11px 28px;border-radius:10px;border:none;cursor:pointer;font-family:'Inter',sans-serif;margin-top:4px;transition:all 0.2s;box-shadow:0 4px 14px rgba(91,45,142,0.3)}
         .btn-reserve:hover{background:linear-gradient(90deg,var(--purple),var(--plight));transform:translateY(-1px)}
@@ -103,11 +138,12 @@ $reservations = $myReservations->fetchAll();
         .alert-error{background:#fff0f0;border:1.5px solid #ffcccc;color:#c0392b;padding:10px 16px;border-radius:10px;margin-bottom:16px;font-size:13px}
 
         /* Reservations table */
-        .res-table{width:100%;border-collapse:collapse}
+        .res-table{width:100%;border-collapse:collapse;color:var(--text-main)}
         .res-table thead th{background:linear-gradient(90deg,var(--pdark),var(--purple));color:#fff;padding:10px 14px;font-size:12.5px;font-weight:600;text-align:left}
-        .res-table tbody tr:nth-child(even){background:#f8f4ff}
-        .res-table tbody tr:hover{background:#f0e8ff}
-        .res-table tbody td{padding:9px 14px;font-size:13px;border-bottom:1px solid #ede6f5}
+        .res-table tbody tr{background:var(--white)}
+        .res-table tbody tr:nth-child(even){background:var(--white);opacity:0.95}
+        .res-table tbody tr:hover{background:var(--bg)!important;color:var(--text-main)}
+        .res-table tbody td{padding:9px 14px;font-size:13px;border-bottom:1px solid var(--border-color)}
         .badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
         .badge-pending{background:#fff3cd;color:#856404}
         .badge-approved{background:#d4edda;color:#155724}
@@ -116,13 +152,13 @@ $reservations = $myReservations->fetchAll();
         @media(max-width:900px){.two-col{grid-template-columns:1fr}}
 
         /* PC GRID CSS */
-        .pc-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 8px; max-height: 200px; overflow-y: auto; padding: 5px; background:#faf8ff; border:1px solid #ddd; border-radius: 8px; }
+        .pc-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 8px; max-height: 200px; overflow-y: auto; padding: 5px; background:var(--input-bg); border:1px solid var(--border-color); border-radius: 8px; }
         .pc-box { aspect-ratio: 1; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; cursor: pointer; transition: transform 0.1s, opacity 0.1s; }
         .pc-box.Available { background: #28a745; }
         .pc-box.Occupied { background: #dc3545; cursor: not-allowed; opacity: 0.6; }
         .pc-box.Maintenance { background: #fd7e14; cursor: not-allowed; opacity: 0.6; }
         .pc-box.selected { transform: scale(1.15); box-shadow: 0 0 0 3px var(--purple); z-index: 2; }
-        .pc-legend { display: flex; gap: 15px; font-size: 11px; color: #777; margin-top: 8px; justify-content:center;}
+        .pc-legend { display: flex; gap: 15px; font-size: 11px; color: var(--text-muted); margin-top: 8px; justify-content:center;}
         .pc-legend span { display: flex; align-items: center; gap: 4px; }
         .pc-legend .dot { width: 10px; height: 10px; border-radius: 2px; }
         .pc-legend .dot.g { background: #28a745; }
@@ -144,6 +180,7 @@ $reservations = $myReservations->fetchAll();
         <li><a href="edit_profile.php">Edit Profile</a></li>
         <li><a href="history.php">History</a></li>
         <li><a href="reservation.php" class="active">Reservation</a></li>
+        <li><a href="#" id="themeToggle" style="cursor:pointer"><i class="fas fa-moon"></i> Theme</a></li>
         <li><a href="../logout.php" class="btn-logout-nav">Log out</a></li>
     </ul>
 </nav>
@@ -312,6 +349,32 @@ function loadPCs() {
             });
         });
 }
+
+// Dark Mode Toggle Logic
+document.addEventListener("DOMContentLoaded", function() {
+    const themeToggle = document.getElementById('themeToggle');
+    if (!themeToggle) return;
+    const root = document.documentElement;
+    const icon = themeToggle.querySelector('i');
+
+    // Update icon initially
+    if(root.getAttribute('data-theme') === 'dark') {
+        icon.classList.replace('fa-moon', 'fa-sun');
+    }
+
+    themeToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(root.getAttribute('data-theme') === 'dark') {
+            root.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            icon.classList.replace('fa-sun', 'fa-moon');
+        } else {
+            root.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+    });
+});
 </script>
 </body>
 </html>

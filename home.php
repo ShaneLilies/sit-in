@@ -5,7 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCS | Home</title>
+    <script>
+    // Immediate Theme Applier to prevent flickering
+    (function() {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,6 +38,7 @@
         <li><a href="#">About</a></li>
         <li><a href="login.php">Login</a></li>
         <li><a href="Register.php" class="btn-nav">Register</a></li>
+        <li><a href="#" id="themeToggle" style="cursor:pointer"><i class="fas fa-moon"></i> Theme</a></li>
     </ul>
 </nav>
 
@@ -46,5 +58,32 @@
         </div>
     </div>
 </section>
+<script>
+// Dark Mode Toggle Logic
+document.addEventListener("DOMContentLoaded", function() {
+    const themeToggle = document.getElementById('themeToggle');
+    if (!themeToggle) return;
+    const root = document.documentElement;
+    const icon = themeToggle.querySelector('i');
+
+    // Update icon initially
+    if(root.getAttribute('data-theme') === 'dark') {
+        icon.classList.replace('fa-moon', 'fa-sun');
+    }
+
+    themeToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(root.getAttribute('data-theme') === 'dark') {
+            root.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            icon.classList.replace('fa-sun', 'fa-moon');
+        } else {
+            root.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+    });
+});
+</script>
 </body>
 </html>
